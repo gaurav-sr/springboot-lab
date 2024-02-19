@@ -1,8 +1,0 @@
-
-.idea
-*.iml
-out
-*.class
-*.jar
-target/
-
