@@ -1,0 +1,36 @@
+buildscript {
+    repositories {
+        maven { url "https://globalrepository.mclocal.int/artifactory/public" }
+    }
+    ext {
+        springBootVersion = '2.0.3.RELEASE'
+        promiseVersion = '0.7.0.RELEASE'
+        commercialServiceBuildSupportVersion = '1.4.0.RELEASE'
+        swagger2springVersion = '1.4.0.RELEASE'
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+repositories {
+    maven { url "https://globalrepository.mclocal.int/artifactory/public" }
+}
+
+apply plugin: 'java'
+apply plugin: "io.spring.dependency-management"
+apply plugin: 'org.springframework.boot'
+
+group = 'com.mastercard.commercial'
+version = "1.0.0-SNAPSHOT"
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+    }
+}
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-web')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}

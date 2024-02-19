@@ -1,2 +1,2 @@
-# springboot-lab
-Spring boot lab
+# spring-boot-lab
+Spring Boot code examples.
