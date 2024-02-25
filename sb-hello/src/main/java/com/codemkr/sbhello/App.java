@@ -1,4 +1,4 @@
-package com.codeinstance.springboot;
+package com.codemkr.sbhello;
 
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
