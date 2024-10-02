@@ -1,0 +1,4 @@
+server:
+  servlet:
+    context-path: /gift-exchange
+  port: 8087
