@@ -57,9 +57,9 @@ public class TestGiftAssignUsingShuffle {
     @Test
     public void testAssignment() {
         Map<String,String> map = new HashMap<>();
-        //map.put("123:456","01/01/2021");
-       // map.put("789:887","01/01/2021");
-        //giftAssign.setLastAssigned(map);
+        map.put("123:456","01/01/2021");
+        map.put("789:887","01/01/2021");
+        giftAssign.setLastAssigned(map);
         Member member1 = new Member("123", "GS0");
         Member member2 = new Member("456", "GS1");
         Member member3 = new Member("789", "GS2");
