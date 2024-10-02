@@ -26,65 +26,66 @@ public class GiftAssignUsingShuffle implements GiftAssign {
             return null;
         }
         Map<Member, Member> map = new HashMap<>();
-        if(members.size() == 2) {
-            map.put(members.get(0), members.get(1));
-            map.put(members.get(1), members.get(0));
-            return map;
-        }
 
         List<Integer> range = IntStream.rangeClosed(0, members.size()-1)
                 .boxed().toList();
         ArrayList<Integer> shuffledIdx = new ArrayList<>();
         shuffledIdx.addAll(range);
         Collections.shuffle(shuffledIdx);
-
+        System.out.println("Shuffled Index "+shuffledIdx);
         List<Integer> receiverIdx = new ArrayList<>();
-        for(int i = 0; i < shuffledIdx.size(); i++) {
-            if(i == shuffledIdx.size() - 1) {
-                map.put(members.get(shuffledIdx.get(i)), members.get(shuffledIdx.getFirst()));
-
-            } else {
-                map.put(members.get(shuffledIdx.get(i)), members.get(shuffledIdx.get(i + 1)));
+        for(int giverIdx=0 ; giverIdx < shuffledIdx.size() ;giverIdx++ ) {
+            Member giver = members.get(shuffledIdx.get(giverIdx));
+            System.out.println("Finding pair for "+giver.getName());
+            int takerIdx = 0;
+            for(takerIdx = giverIdx + 1; takerIdx < shuffledIdx.size(); takerIdx++) {
+                if(receiverIdx.contains(shuffledIdx.get(takerIdx))) {
+                    continue;
+                }
+                Member taker = members.get(shuffledIdx.get(takerIdx));
+                if(lastAssignedInLastGivenYears(3, giver, taker)) {
+                    continue;
+                }
+                System.out.println("Pair Found "+taker.getId());
+                map.put(giver, taker);
+                receiverIdx.add(shuffledIdx.get(takerIdx));
+                break;
+            }
+            if(takerIdx == shuffledIdx.size()) {
+                for(takerIdx = 0; takerIdx < giverIdx; takerIdx++) {
+                    if(receiverIdx.contains(shuffledIdx.get(takerIdx))) {
+                        continue;
+                    }
+                    Member taker = members.get(shuffledIdx.get(takerIdx));
+                    if(lastAssignedInLastGivenYears(3, giver, taker)) {
+                        continue;
+                    }
+                    map.put(giver, taker);
+                    receiverIdx.add(shuffledIdx.get(takerIdx));
+                }
             }
         }
-//        for(Integer idx : shuffledIdx) {
-//            Member member = members.get(idx);
-//            System.out.println("Finding pair for "+member.getId());
-//            for(Integer idx2 : shuffledIdx) {
-//                if(idx2.equals(idx) || receiverIdx.contains(idx2)) {
-//                    continue;
-//                }
-//                Member member2 = members.get(idx2);
-//                String key = member.getId()+":"+member2.getId();
-//                if(lastAssigned.containsKey(key)) {
-//                    System.out.println("Key Match found...");
-//                    String val = lastAssigned.get(key);
-//                    try {
-//                        Date assignedDate = dateFormat.parse(val);
-//                        LocalDate assignedLocalDate = LocalDate.ofInstant(assignedDate.toInstant(), ZoneId.systemDefault());
-//                        LocalDate currentLocalDate = LocalDate.now();
-//                        Period period = Period.between(assignedLocalDate, currentLocalDate);
-//                        int diffYears = Math.abs(period.getYears());
-//                        if(diffYears > 3) {
-//                            map.put(member, member2);
-//                            receiverIdx.add(idx2);
-//                            break;
-//                        } else {
-//                            System.out.println("Found match with less than 3 years");
-//                        }
-//                    } catch (ParseException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                } else {
-//                    System.out.println("Pair Found "+member2.getId());
-//                    map.put(member, member2);
-//                    receiverIdx.add(idx2);
-//                    break;
-//                }
-//            }
-//        }
         map.forEach((m1, m2) -> System.out.println(m1.getName()+ " gives to "+ m2.getName()));
         return map;
+    }
+
+    private boolean lastAssignedInLastGivenYears(int year, Member giver, Member taker) {
+        String key = giver.getId() + ":" + taker.getId();
+        if (lastAssigned.containsKey(key)) {
+            System.out.println("Giver Taker Match found...");
+            String lastAssignedDate = lastAssigned.get(key);
+            try {
+                Date assignedDate = dateFormat.parse(lastAssignedDate);
+                LocalDate assignedLocalDate = LocalDate.ofInstant(assignedDate.toInstant(), ZoneId.systemDefault());
+                LocalDate currentLocalDate = LocalDate.now();
+                Period period = Period.between(assignedLocalDate, currentLocalDate);
+                int diffYears = Math.abs(period.getYears());
+                return diffYears > year;
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return false;
     }
 
 }
