@@ -24,7 +24,7 @@ public class MemberDaoImpl implements MemberDao {
         if(memberEntities != null) {
             memberEntities.forEach(memberEntity -> {
                 Member member = Member.builder()
-                        .id(memberEntity.getId())
+                        .id(memberEntity.getId().toString())
                         .name(memberEntity.getName())
                         .build();
                 members.add(member);
@@ -36,21 +36,24 @@ public class MemberDaoImpl implements MemberDao {
     public Member fetchMemberById(String id) {
         MemberEntity memberEntity = memberRepository.findById(id).orElse(null);
         if (memberEntity != null) {
-            return Member.builder().id(id).name(memberEntity.getName()).build();
+            return Member.builder()
+                    .id(memberEntity.getId().toString())
+                    .name(memberEntity.getName())
+                    .build();
         }
         return null;
     }
 
-    public boolean insertMember(Member member) {
+    public Member insertMember(Member member) {
         if(member == null) {
-            return false;
+            return null;
         }
         MemberEntity memberEntity = MemberEntity.builder()
-                .id(member.getId())
                 .name(member.getName())
                 .build();
-        memberRepository.save(memberEntity);
-        return true;
+        MemberEntity createdMemberEntity = memberRepository.save(memberEntity);
+        member.setId(createdMemberEntity.getId().toString());
+        return member;
     }
 
     public void deleteMember(String id) {
@@ -59,7 +62,7 @@ public class MemberDaoImpl implements MemberDao {
 
     public void updateMember(Member member) {
         MemberEntity memberEntity = MemberEntity.builder()
-                                    .id(member.getId())
+                                    .id(Long.parseLong(member.getId()))
                                     .name(member.getName()).build();
         memberRepository.save(memberEntity);
     }
