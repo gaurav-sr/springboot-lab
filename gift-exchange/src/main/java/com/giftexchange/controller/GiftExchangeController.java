@@ -33,7 +33,7 @@ public class GiftExchangeController {
 
     @PostMapping(value = "/members", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Member> addMember(@RequestBody Member member) {
-        if(memberService.fetchMemberById(member.getId()) == null) {
+        if(member.getName() != null) {
             memberService.addMember(member);
             return new ResponseEntity<>(member, HttpStatus.CREATED);
         } else {
