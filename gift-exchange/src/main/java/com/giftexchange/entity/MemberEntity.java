@@ -1,9 +1,6 @@
 package com.giftexchange.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -15,7 +12,8 @@ import lombok.*;
 public class MemberEntity {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
 
     @Column(name="name", nullable = false)
     private String name;
