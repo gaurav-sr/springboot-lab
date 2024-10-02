@@ -52,7 +52,7 @@ public class TestMemberService {
 
     @Test
     public void fetchAllMembers_OneMember_ListHasOneMember(){
-        MemberEntity memberEntity = MemberEntity.builder().id("123").name("GS").build();
+        MemberEntity memberEntity = MemberEntity.builder().id(123l).name("GS").build();
         Mockito.when(memberRepository.findAll()).thenReturn(List.of(memberEntity));
         MemberDao memberDao = new MemberDaoImpl(memberRepository);
 
@@ -64,10 +64,10 @@ public class TestMemberService {
 
     @Test
     public void fetchAllMembers_ManyMembers_ListHasAllMembers(){
-        MemberEntity memberEntity_1 = MemberEntity.builder().id("121").name("GS1").build();
-        MemberEntity memberEntity_2 = MemberEntity.builder().id("122").name("GS2").build();
-        MemberEntity memberEntity_3 = MemberEntity.builder().id("123").name("GS3").build();
-        MemberEntity memberEntity_4 = MemberEntity.builder().id("124").name("GS4").build();
+        MemberEntity memberEntity_1 = MemberEntity.builder().id(121l).name("GS1").build();
+        MemberEntity memberEntity_2 = MemberEntity.builder().id(122l).name("GS2").build();
+        MemberEntity memberEntity_3 = MemberEntity.builder().id(123l).name("GS3").build();
+        MemberEntity memberEntity_4 = MemberEntity.builder().id(124l).name("GS4").build();
         Mockito.when(memberRepository.findAll()).thenReturn(List.of(memberEntity_1, memberEntity_2, memberEntity_3, memberEntity_4));
         MemberDao memberDao = new MemberDaoImpl(memberRepository);
 
@@ -79,7 +79,7 @@ public class TestMemberService {
 
     @Test
     public void fetchMemberById_OneMember_ReturnOneMember() {
-        MemberEntity memberEntity = MemberEntity.builder().id("123").name("GS").build();
+        MemberEntity memberEntity = MemberEntity.builder().id(123l).name("GS").build();
         Mockito.when(memberRepository.findById("123")).thenReturn(Optional.ofNullable(memberEntity));
         MemberDao memberDao = new MemberDaoImpl(memberRepository);
 
@@ -110,11 +110,12 @@ public class TestMemberService {
 
     @Test
     public void addMember_validMember_insertSuccess() {
-        MemberEntity memberEntity = MemberEntity.builder().id("123").name("GS").build();
-        Mockito.when(memberRepository.save(memberEntity)).thenReturn(memberEntity);
+        MemberEntity memberEntity = MemberEntity.builder().name("GS").build();
+        MemberEntity createdMemberEntity = MemberEntity.builder().id(1L).name("GS").build();
+        Mockito.when(memberRepository.save(memberEntity)).thenReturn(createdMemberEntity);
         MemberDao memberDao = new MemberDaoImpl(memberRepository);
         memberService = new MemberService( memberDao);
-        Member member = Member.builder().id("123").name("GS").build();
+        Member member = Member.builder().name("GS").build();
         memberService.addMember(member);
     }
 
@@ -122,6 +123,6 @@ public class TestMemberService {
     public void addMember_nullMember_insertFail() {
         MemberDao memberDao = new MemberDaoImpl(memberRepository);
         memberService = new MemberService( memberDao);
-        Assertions.assertFalse(memberService.addMember(null));
+        Assertions.assertNull(memberService.addMember(null));
     }
 }
