@@ -26,8 +26,8 @@ public class MemberService {
         return members;
     }
 
-    public boolean addMember(Member member) {
-        return memberDao.insertMember(member);
+    public Member addMember(Member member) {
+       return memberDao.insertMember(member);
     }
 
     public Member fetchMemberById(String id) {
