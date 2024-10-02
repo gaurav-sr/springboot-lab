@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
 import java.util.Objects;
 
 @ExtendWith(SpringExtension.class)
@@ -42,30 +41,30 @@ public class GiftExchangeIntegrationTest {
 
     @Test
     public void testAddMember() {
-        Member member = Member.builder().id("123").name("GS").build();
+        Member member = Member.builder().name("GS").build();
         ResponseEntity<Member> responseEntity = restTemplate.postForEntity(HOST + port + "/gift-exchange/members", member, Member.class);
         Assertions.assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+        Assertions.assertNotNull(Objects.requireNonNull(responseEntity.getBody()).getId());
+        Assertions.assertNotNull(responseEntity.getBody().getName());
         ResponseEntity<Members> getResponseEntity = restTemplate.getForEntity(HOST + port + "/gift-exchange/members", Members.class);
         Assertions.assertEquals(HttpStatus.OK, getResponseEntity.getStatusCode());
         Assertions.assertEquals(1, Objects.requireNonNull(getResponseEntity.getBody()).getMembers().size());
     }
 
     @Test
-    public void addDuplicateMember_shouldReturnAlreadyExist() {
-        Member member = Member.builder().id("123").name("GS").build();
+    public void addMemberWithNullName_shouldReturnBadRequest() {
+        Member member = Member.builder().build();
         ResponseEntity<Member> responseEntity = restTemplate.postForEntity(HOST + port + "/gift-exchange/members", member, Member.class);
-        Assertions.assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-        responseEntity = restTemplate.postForEntity(HOST + port + "/gift-exchange/members", member, Member.class);
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
     @Test
     public void testGetMembers() {
-        Member member_1 = Member.builder().id("123").name("GS1").build();
+        Member member_1 = Member.builder().name("GS1").build();
         restTemplate.postForEntity(HOST + port + "/gift-exchange/members", member_1, Member.class);
-        Member member_2 = Member.builder().id("124").name("GS2").build();
+        Member member_2 = Member.builder().name("GS2").build();
         restTemplate.postForEntity(HOST + port + "/gift-exchange/members", member_2, Member.class);
-        Member member_3 = Member.builder().id("125").name("GS3").build();
+        Member member_3 = Member.builder().name("GS3").build();
         restTemplate.postForEntity(HOST + port + "/gift-exchange/members", member_3, Member.class);
 
 
@@ -76,11 +75,12 @@ public class GiftExchangeIntegrationTest {
 
     @Test
     public void testGetMemberId() {
-        Member member_1 = Member.builder().id("123").name("GS1").build();
-        restTemplate.postForEntity(HOST + port + "/gift-exchange/members", member_1, Member.class);
-        ResponseEntity<Member> responseEntity = restTemplate.getForEntity(HOST + port + "/gift-exchange/members/123", Member.class);
+        Member member_1 = Member.builder().name("GS1").build();
+        ResponseEntity<Member> createdMember = restTemplate.postForEntity(HOST + port + "/gift-exchange/members", member_1, Member.class);
+        ResponseEntity<Member> responseEntity = restTemplate.getForEntity(HOST + port + "/gift-exchange/members/"+createdMember.getBody().getId(), Member.class);
         Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        Assertions.assertEquals("GS1", responseEntity.getBody().getName());
+        Assertions.assertEquals(createdMember.getBody().getId(), responseEntity.getBody().getId());
+        Assertions.assertEquals(createdMember.getBody().getName(), responseEntity.getBody().getName());
     }
 
     @Test
@@ -92,34 +92,38 @@ public class GiftExchangeIntegrationTest {
     @Test
     public void testDeleteMember() {
 
-        Member member_1 = Member.builder().id("123").name("GS1").build();
-        restTemplate.postForEntity(HOST + port + "/gift-exchange/members", member_1, Member.class);
+        Member member_1 = Member.builder().name("GS1").build();
+        ResponseEntity<Member> createdMember = restTemplate.postForEntity(HOST + port + "/gift-exchange/members", member_1, Member.class);
+        String id = createdMember.getBody().getId();
+        restTemplate.delete(HOST + port + "/gift-exchange/members/"+id);
 
-        restTemplate.delete(HOST + port + "/gift-exchange/members/123");
-
-        ResponseEntity<Member> responseEntity = restTemplate.getForEntity(HOST + port + "/gift-exchange/members/123", Member.class);
+        ResponseEntity<Member> responseEntity = restTemplate.getForEntity(HOST + port + "/gift-exchange/members/"+id, Member.class);
         Assertions.assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
 
     @Test
     public void testGiftExchange() {
         // given
-        Member member_1 = Member.builder().id("123").name("GS1").build();
+        Member member_1 = Member.builder().name("GS1").build();
         restTemplate.postForEntity(HOST + port + "/gift-exchange/members", member_1, Member.class);
-        Member member_2 = Member.builder().id("124").name("GS2").build();
+        Member member_2 = Member.builder().name("GS2").build();
         restTemplate.postForEntity(HOST + port + "/gift-exchange/members", member_2, Member.class);
-        Member member_3 = Member.builder().id("125").name("GS3").build();
+        Member member_3 = Member.builder().name("GS3").build();
         restTemplate.postForEntity(HOST + port + "/gift-exchange/members", member_3, Member.class);
-        Member member_4 = Member.builder().id("126").name("GS4").build();
+        Member member_4 = Member.builder().name("GS4").build();
         restTemplate.postForEntity(HOST + port + "/gift-exchange/members", member_4, Member.class);
-        Member member_5 = Member.builder().id("127").name("GS5").build();
+        Member member_5 = Member.builder().name("GS5").build();
         restTemplate.postForEntity(HOST + port + "/gift-exchange/members", member_5, Member.class);
+        Member member_6 = Member.builder().name("GS6").build();
+        restTemplate.postForEntity(HOST + port + "/gift-exchange/members", member_6, Member.class);
 
         //when
         ResponseEntity<GiftList[]> responseEntity = restTemplate.getForEntity(HOST + port + "/gift-exchange/gift_exchange", GiftList[].class);
 
         //Then
         Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        System.out.println(responseEntity.getBody());
 
     }
 }
