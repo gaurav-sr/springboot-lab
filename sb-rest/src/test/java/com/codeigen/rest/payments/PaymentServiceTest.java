@@ -10,7 +10,8 @@ public class PaymentServiceTest {
     @Test
     public void test() {
         PaymentService paymentService = new PaymentServiceImpl();
-        PaymentRequest paymentRequest = PaymentRequest.builder().cardId("2134411").build();
+        PaymentRequest paymentRequest = new PaymentRequest();
+        paymentRequest.setCardId("2134411");
         PaymentResponse paymentResponse = paymentService.processPayment(paymentRequest);
         Assertions.assertNotNull(paymentResponse);
         Assertions.assertEquals("FAIL", paymentResponse.getMessage());

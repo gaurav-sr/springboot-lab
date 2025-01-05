@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codeigen.rest.payments.PaymentServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-03-09T11:29:46" hostname="Gauravs-MacBook-Pro.local" time="0.005">
+  <properties/>
+  <testcase name="test()" classname="com.codeigen.rest.payments.PaymentServiceTest" time="0.005"/>
+  <system-out><![CDATA[2024-03-09T11:29:46.405Z  INFO 59747 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.codeigen.rest.payments.PaymentServiceTest]: PaymentServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-03-09T11:29:46.417Z  INFO 59747 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.codeigen.rest.PaymentApp for test class com.codeigen.rest.payments.PaymentServiceTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.3)
+
+2024-03-09T11:29:46.457Z  INFO 59747 --- [    Test worker] c.c.rest.payments.PaymentServiceTest     : Starting PaymentServiceTest using Java 21 with PID 59747 (started by gauravs in /Users/gauravs/codes/github.com/springboot-lab/sb-rest)
+2024-03-09T11:29:46.458Z  INFO 59747 --- [    Test worker] c.c.rest.payments.PaymentServiceTest     : No active profile set, falling back to 1 default profile: "default"
+2024-03-09T11:29:46.815Z  INFO 59747 --- [    Test worker] c.c.rest.payments.PaymentServiceTest     : Started PaymentServiceTest in 0.387 seconds (process running for 5.324)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

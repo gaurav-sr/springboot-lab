@@ -1,13 +1,11 @@
 package com.codeigen.rest.payments;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class PaymentResponse {
-    private String id;
+    private String cardId;
     private String message;
 }

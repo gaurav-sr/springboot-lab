@@ -27,7 +27,9 @@ public class PaymentController {
      * @param paymentRequest PaymentRequest object
      * @return paymentResponse
      */
-    @RequestMapping(path="/payment", method= RequestMethod.POST)
+    @RequestMapping(path="/payment", method= RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PaymentResponse> handlePayment(@RequestBody PaymentRequest paymentRequest) {
         PaymentResponse paymentResponse = paymentService.processPayment(paymentRequest);
         return new ResponseEntity<>(paymentResponse, HttpStatus.OK);

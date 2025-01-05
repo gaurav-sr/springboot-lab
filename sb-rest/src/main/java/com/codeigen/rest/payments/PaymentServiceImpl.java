@@ -11,18 +11,19 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentResponse processPayment(PaymentRequest paymentRequest) {
-        PaymentResponse paymentResponse = PaymentResponse.builder().id(getUniqueId()).build();
+        PaymentResponse paymentResponse = null;
+
         if(validateCardId(paymentRequest.getCardId())) {
-            paymentResponse.setMessage(Constants.SUCCESS_MESSAGE);
+            paymentResponse = PaymentResponse.builder().message(Constants.SUCCESS_MESSAGE).cardId(getUniqueId()).build();
         } else {
-            paymentResponse.setMessage(Constants.FAIL_MESSAGE);
+            paymentResponse = new PaymentResponse(getUniqueId(), Constants.FAIL_MESSAGE);
         }
         return paymentResponse;
     }
 
     @Override
     public PaymentResponse processPayment() {
-        return PaymentResponse.builder().build();
+        return new PaymentResponse(null,null);
     }
 
     private boolean validateCardId(String cardId) {
